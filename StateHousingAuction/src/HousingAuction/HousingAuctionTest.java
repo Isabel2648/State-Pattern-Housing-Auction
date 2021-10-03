@@ -8,24 +8,18 @@ public class HousingAuctionTest {
         System.out.println("Please place your bid");
 
         auctionHouses.placeBid();
-        auctionHouses.rescindBid();
+        auctionHouses.runCredit();
 
         System.out.println("Please place your bid");
 
         auctionHouses.placeBid();
-        auctionHouses.rescindBid();
-        auctionHouses.rescindBid();
+        auctionHouses.runCredit();
         auctionHouses.placeBid();
-
-        System.out.println("Please place your bid");
-
+        auctionHouses.runCredit();
+        
+        auctionHouses.refill(3);
         auctionHouses.placeBid();
-        auctionHouses.placeBid();
-        auctionHouses.rescindBid();
-        auctionHouses.placeBid();
-        auctionHouses.rescindBid();
-        auctionHouses.placeBid();
-        auctionHouses.placeBid();
+        auctionHouses.runCredit();
 
         System.out.println("Thank you for participating in the Lewis University housing auction!");
     }

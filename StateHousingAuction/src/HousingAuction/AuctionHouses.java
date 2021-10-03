@@ -1,58 +1,92 @@
 package HousingAuction;
 
 public class AuctionHouses {
-	
-	final static int NotForAuction = 0;
-    final static int NO_Bid = 1;
-    final static int YES_Bid = 2;
-    final static int SOLD = 3;
 
-    int state = NotForAuction;
+    State notForAuctionState;
+    State noBiddingState;
+    State yesBiddingState;
+    State acceptBidState;
+
+    State state;
     int count = 0;
 
-    public AuctionHouses(int count) {
-        this.count = count;
-        if (count > 0) {
-            state = NO_Bid;
+    public AuctionHouses(int numberOfBids) {
+    	notForAuctionState = new NotForAuctionState(this);
+    	noBiddingState = new NoBiddingState(this);
+    	yesBiddingState = new YesBiddingState(this);
+    	acceptBidState = new AcceptBidState(this);
+       
+        this.count = numberOfBids;
+        if (numberOfBids > 0) {
+            state = noBiddingState;
+        } else {
+            state = notForAuctionState;
         }
     }
 
     public void placeBid() {
-        if (state == YES_Bid) {
-            System.out.println("You cannot place another auction bid at this time");
-        } else if (state == NO_Bid) {
-            state = YES_Bid;
-            System.out.println("Your auction bid has been placed");
-        } else if (state == NotForAuction) {
-            System.out.println("Unable to place bid. House not available for auction");
-        } else if (state == SOLD) {
-            System.out.println("Please wait while we process your bid");
-        }
+        state.placeBid();
     }
 
     public void rescindBid() {
-        if (state == YES_Bid) {
-            System.out.println("Your auction bid has been rescinced");
-            state = NO_Bid;
-        } else if (state == NO_Bid) {
-            System.out.println("You have not placed your auction bid");
-        } else if (state == SOLD) {
-            System.out.println("Sorry, but your bid as already been processed");
-        } else if (state == NotForAuction) {
-            System.out.println("Your bid was never placed for you to rescind");
+        state.rescindBid();
+    }
+
+    public void runCredit() {
+        state.runCredit();
+        state.bidAccepted();
+    }
+
+    void processingCredit() {
+        System.out.println("Please wait while we process your credit.");
+        if (count > 0) {
+            count = count - 1;
         }
     }
-  
-    private void bidAccepted() {
-        if (state == SOLD) {
-            System.out.println("Congradulations! Your bid has been accepted");
-            count = count - 1;
-        } else if (state == NO_Bid) {
-            System.out.println("Sorry, but you must have placed your bid before");
-        } else if (state == NotForAuction) {
-            System.out.println("Sorry, your bid was not accepted");
-        } else if (state == YES_Bid) {
-            System.out.println("Sorry, your bid was not accepted");
+
+    int getCount() {
+        return count;
+    }
+
+    void refill(int count) {
+        this.count += count;
+        System.out.println("The ballot machine was just refilled; its new count is: " + this.count);
+        state.refill();
+    }
+
+    void setState(State state) {
+        this.state = state;
+    }
+    public State getState() {
+        return state;
+    }
+
+    public State getNotForAuctionState() {
+        return notForAuctionState;
+    }
+
+    public State getNoBiddingState() {
+        return noBiddingState;
+    }
+
+    public State getYesBiddingState() {
+        return yesBiddingState;
+    }
+
+    public State getAcceptBidState() {
+        return acceptBidState;
+    }
+
+    public String toString() {
+        StringBuffer result = new StringBuffer();
+        result.append("\nFlores Realty, Inc.");
+        result.append("\nJava-enabled Auction House Ballot #2319");
+        result.append("\nInventory: " + count + " Bid");
+        if (count != 1) {
+            result.append("s");
         }
+        result.append("\n");
+        result.append("Ballot is " + state + "\n");
+        return result.toString();
     }
 }
