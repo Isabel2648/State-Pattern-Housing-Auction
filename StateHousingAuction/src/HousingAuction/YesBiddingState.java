@@ -1,6 +1,9 @@
 package HousingAuction;
 
+import java.util.Random;
+
 public class YesBiddingState implements State {
+	Random randomWinner = new Random(System.currentTimeMillis());
 	AuctionHouses auctionHouses;
  
 	public YesBiddingState(AuctionHouses auctionHouses) {
@@ -18,7 +21,12 @@ public class YesBiddingState implements State {
  
 	public void runCredit() {
 		System.out.println("Running your credit now, please wait...");
-		auctionHouses.setState(auctionHouses.getAcceptBidState());
+		int winner = randomWinner.nextInt(6);
+		if ((winner == 0) && (auctionHouses.getCount() > 1)) {
+			auctionHouses.setState(auctionHouses.getLuckyPrizeState());
+		} else {
+			auctionHouses.setState(auctionHouses.getAcceptBidState());
+		}	
 	}
 
     public void bidAccepted() {
